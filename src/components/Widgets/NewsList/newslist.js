@@ -5,17 +5,22 @@ import axios from 'axios';
 import {URL} from '../../../config';
 import style from './newslist.css';
 import Button from '../Buttons/button';
+import CardInfo from '../CardInfo/cardinfo';
 
 class NewsList extends Component{
     
     state={
         items:[],
+        teams:[],
         start:this.props.start,
         end:this.props.start + this.props.amount,
         amount:this.props.amount
     }
 
     componentDidMount(){
+        if(this.state.teams.length === 0){
+            this.getTeams()
+        }
         this.request(this.state.start, this.state.end);
     }
 
@@ -23,7 +28,20 @@ class NewsList extends Component{
         this._asyncRequest = axios.get(`${URL}articles?_start=${start}&_end=${end}`)
         .then(response => {
             this._asyncRequest = null;
-            this.setState({items: [...this.state.items,...response.data]});
+            this.setState({
+                items: [...this.state.items,...response.data],
+                start,
+                end
+            });
+        })
+    }
+
+    getTeams = () =>
+    {
+        this._asyncRequest = axios.get(`${URL}teams`)
+        .then(response => {
+            this._asyncRequest = null;
+            this.setState({teams: response.data});
         })
     }
 
@@ -66,6 +84,7 @@ class NewsList extends Component{
                 <div>
                     <div className={style.newslist_item}>
                         <Link to={`articles/${item.id}`}>
+                            <CardInfo team={this.state.teams[item.team]} articleDate={item.date} />
                             <h2>{item.title}</h2>
                         </Link>
                     </div>
