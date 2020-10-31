@@ -5,10 +5,10 @@ import CardInfo from '../CardInfo/cardinfo';
 
 const VideosTemplate = (props) => {
     
-    const renderCardInfo = (index, date) =>{
+    const renderCardInfo = (teamId, date) =>{
         return props.teams.length === 0
         ? null
-        : <CardInfo team={props.teams[index]} articleDate={date} />
+        : <CardInfo teams={props.teams} articleDate={date} team={teamId}/>
     }
 
     const renderData = () => {

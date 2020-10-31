@@ -6,10 +6,10 @@ import {CSSTransition} from 'react-transition-group';
 
 const NewsTemplate = (props) => {
 
-    const renderCardInfo = (index, date) =>{
+    const renderCardInfo = (teamId, date) =>{
         return props.teams.length === 0
         ? null
-        : <CardInfo team={props.teams[index]} articleDate={date} />
+        : <CardInfo teams={props.teams} articleDate={date} team={teamId}/>
     }
 
     const renderData = () => {
