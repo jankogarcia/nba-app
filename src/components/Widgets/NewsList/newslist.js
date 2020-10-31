@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import {CSSTransition, TransitionGroup} from 'react-transition-group';
-import {Link} from 'react-router-dom';
+import {TransitionGroup} from 'react-transition-group';
 import axios from 'axios';
 import {URL} from '../../../config';
-import style from './newslist.css';
 import Button from '../Buttons/button';
-import CardInfo from '../CardInfo/cardinfo';
+import NewsTemplate from './news_template';
 
 class NewsList extends Component{
     
@@ -55,7 +53,7 @@ class NewsList extends Component{
         let template = null;
         switch(templateName){
             case 'card':
-                template = this.renderNewsCard()
+                template = <NewsTemplate news={this.state.items} teams={this.state.teams}/>
                 break;
             default:
                 template = null;
@@ -67,31 +65,6 @@ class NewsList extends Component{
     loadMore =() => {
         let end = this.state.end + this.state.amount;
         this.request(this.state.end, end);
-    }
-
-    renderNewsCard(){
-        return this.state.items.length === 0
-        ? null
-        : this.state.items.map((item, i) => {
-            return <CSSTransition
-                classNames={{
-                    enter:style.newslist_wrapper,
-                    enterActive:style.newslist_wrapper_enter
-                }}
-                timeout={500}
-                key={i}
-            >
-                <div>
-                    <div className={style.newslist_item}>
-                        <Link to={`articles/${item.id}`}>
-                            <CardInfo team={this.state.teams[item.team]} articleDate={item.date} />
-                            <h2>{item.title}</h2>
-                        </Link>
-                    </div>
-                </div>
-            </CSSTransition>
-            
-        });
     }
 
     render(){
