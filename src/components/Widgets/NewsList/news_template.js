@@ -12,6 +12,48 @@ const NewsTemplate = (props) => {
         : <CardInfo teams={props.teams} articleDate={date} team={teamId}/>
     }
 
+    const renderTransitionContent = (item) => (
+        <div>
+            <div className={style.newslist_item}>
+                <Link to={`articles/${item.id}`}>
+                    {renderCardInfo(item.team, item.date)}
+                    <h2>{item.title}</h2>
+                </Link>
+            </div>
+        </div>
+    )
+
+    const renderTransitionContentWithImage = (item) => (
+        <div>
+            <Link to={`articles/${item.id}`}>
+                <div className={style.flex_wrapper}>
+                    <div className={style.left}
+                        style={{
+                            background:`url('/images/articles/${item.image}')`
+                        }}
+                    >
+                        <div></div>
+                    </div>
+                    <div className={style.right}>
+                        {renderCardInfo(item.team, item.date)}
+                        <h2>{item.title}</h2>
+                    </div>
+                </div>
+            </Link>
+        </div>
+    )
+
+    const renderTransitions = (item) => {
+        switch(props.type){
+            case 'card':
+                return renderTransitionContent(item);
+            case 'cardMain':
+                return renderTransitionContentWithImage(item);
+            default:
+                return null;
+        }
+    }
+
     const renderData = () => {
         return props.news.map((item, i) => {
             return <CSSTransition
@@ -22,14 +64,7 @@ const NewsTemplate = (props) => {
             timeout={500}
             key={i}
         >
-            <div>
-                <div className={style.newslist_item}>
-                    <Link to={`articles/${item.id}`}>
-                        {renderCardInfo(item.team, item.date)}
-                        <h2>{item.title}</h2>
-                    </Link>
-                </div>
-            </div>
+            {renderTransitions(item)}
         </CSSTransition>
         });
     }

@@ -49,17 +49,11 @@ class NewsList extends Component{
         }
     }
 
-    renderData(templateName){
-        let template = null;
-        switch(templateName){
-            case 'card':
-                template = <NewsTemplate news={this.state.items} teams={this.state.teams}/>
-                break;
-            default:
-                template = null;
-        }
-
-        return template
+    renderData(){
+        if(this.props.type === null)
+            return null;
+        
+        return <NewsTemplate news={this.state.items} teams={this.state.teams} type={this.props.type}/>
     }
 
     loadMore =() => {
@@ -73,7 +67,7 @@ class NewsList extends Component{
                 <TransitionGroup
                     component="div"
                     className="list">
-                    {this.renderData(this.props.type)}
+                    {this.renderData()}
                 </TransitionGroup>
                 
                 <Button 
