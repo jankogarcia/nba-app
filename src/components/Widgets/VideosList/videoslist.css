@@ -35,3 +35,7 @@
     background-position: center center !important;
     /* background: url("/images/videos/8.jpg"); */
 }
+
+.relatedWrapper{
+    margin: 0 5px;
+}
