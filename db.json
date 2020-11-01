@@ -202,7 +202,7 @@
         },
         {
           "id":3,
-          "team":8,
+          "team":3,
           "title":"Laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis",
           "image":"3.jpg",
           "url":"XKI0xlnMBZQ",
@@ -211,7 +211,7 @@
         },
         {
           "id":4,
-          "team":2,
+          "team":1,
           "title":"Qui blanditiis praesentium voluptatum deleniti atque corrupti quos",
           "image":"4.jpg",
           "url":"XKI0xlnMBZQ",
@@ -220,7 +220,7 @@
         },
         {
           "id":5,
-          "team":8,
+          "team":4,
           "title":"Sed ut perspiciatis unde omnis iste natus error sit",
           "image":"5.jpg",
           "url":"XKI0xlnMBZQ",
@@ -229,7 +229,7 @@
         },
         {
           "id":6,
-          "team":8,
+          "team":5,
           "title":"Laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis",
           "image":"6.jpg",
           "url":"XKI0xlnMBZQ",
@@ -239,7 +239,7 @@
 
         {
           "id":7,
-          "team":2,
+          "team":6,
           "title":"Qui blanditiis praesentium voluptatum deleniti atque corrupti quos",
           "image":"7.jpg",
           "url":"XKI0xlnMBZQ",
@@ -248,7 +248,7 @@
         },
         {
           "id":8,
-          "team":8,
+          "team":7,
           "title":"Sed ut perspiciatis unde omnis iste natus error sit",
           "image":"8.jpg",
           "url":"XKI0xlnMBZQ",
@@ -275,7 +275,7 @@
         },
         {
           "id":11,
-          "team":8,
+          "team":3,
           "title":"Sed ut perspiciatis unde omnis iste natus error sit",
           "image":"1.jpeg",
           "url":"XKI0xlnMBZQ",
@@ -284,7 +284,7 @@
         },
         {
           "id":12,
-          "team":8,
+          "team":2,
           "title":"Laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis",
           "image":"2.jpg",
           "url":"XKI0xlnMBZQ",
@@ -293,7 +293,7 @@
         },
         {
           "id":13,
-          "team":8,
+          "team":9,
           "title":"Sed ut perspiciatis unde omnis iste natus error sit",
           "image":"3.jpg",
           "url":"XKI0xlnMBZQ",
@@ -302,7 +302,7 @@
         },
         {
           "id":14,
-          "team":8,
+          "team":3,
           "title":"Laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis",
           "image":"4.jpg",
           "url":"XKI0xlnMBZQ",
@@ -311,7 +311,7 @@
         },
         {
           "id":15,
-          "team":2,
+          "team":6,
           "title":"Qui blanditiis praesentium voluptatum deleniti atque corrupti quos",
           "image":"5.jpg",
           "url":"XKI0xlnMBZQ",
@@ -347,7 +347,7 @@
         },
         {
           "id":19,
-          "team":8,
+          "team":1,
           "title":"Sed ut perspiciatis unde omnis iste natus error sit",
           "image":"9.jpg",
           "url":"XKI0xlnMBZQ",
@@ -473,6 +473,7 @@
         {
           "id": 8,
           "name": "Nuggets",
+		  "city": "Denver",
           "logo": "nuggets.png",
           "poll": "false",
           "count": 0,

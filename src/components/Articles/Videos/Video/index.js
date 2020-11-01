@@ -49,7 +49,6 @@ class Videos extends Component{
             this._asyncRequest = axios.get(`${URL}videos?q=${team.city}&_limit=3`)
             .then(innerResponse => {
                 this._asyncRequest  = null;
-                console.log(innerResponse.data)
                 this.setState({
                     teams,
                     relatedVideos:innerResponse.data
@@ -65,7 +64,7 @@ class Videos extends Component{
     }
 
     renderBody(){
-        return this.state.video === null || this.state.teams.length === 0 ||  this.state.relatedVideos.length === 0
+        return this.state.video === null || this.state.teams.length === 0
         ? null
         : <Body video={this.state.video} relatedVideosData={{teams:this.state.teams, videos:this.state.relatedVideos }}/>
     }
