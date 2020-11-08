@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import {URL} from '../../../config';
 import Button from '../Buttons/button';
 import styles from './videoslist.css';
 import VideosTemplate from './videos_template';
+import {dbVideos, dbTeams, dataFlatter} from '../../../firebase';
 
 class VideosList extends Component{
 
@@ -17,27 +16,38 @@ class VideosList extends Component{
 
     loadMore = () => {
         let end = this.state.end + this.state.amount;
-        this.request(this.state.end, end);
+        this.request(this.state.end + 1, end);
     }
 
     getTeams = () =>
     {
-        this._asyncRequest = axios.get(`${URL}teams`)
-        .then(response => {
-            this._asyncRequest = null;
-            this.setState({teams: response.data});
+        dbTeams
+        .once('value')
+        .then((snapshot) => {
+            let teams = dataFlatter(snapshot)
+            this.setState({teams})
+        })
+        .catch(e => {
+            console.log(e)
         })
     }
 
     request = (start, end) => {
-        this._asyncRequest = axios.get(`${URL}videos?_start=${start}&_end=${end}`)
-        .then(response => {
-            this._asyncRequest = null;
+        dbVideos
+        .orderByChild('id')
+        .startAt(start)
+        .endAt(end)
+        .once('value')
+        .then((snapshot) => {
+            let videos = dataFlatter(snapshot)
             this.setState({
-                videos: [...this.state.videos,...response.data],
+                videos:[...this.state.videos, ...videos],
                 start,
                 end
-            });
+            })
+        })
+        .catch(e => {
+            console.log(e)
         })
     }
 
@@ -71,12 +81,6 @@ class VideosList extends Component{
                 template = null
         }
         return template;
-    }
-
-    componentWillUnmount(){
-        if(this._asyncRequest){
-            this._asyncRequest.cancel();
-        }
     }
 
     componentDidMount(){

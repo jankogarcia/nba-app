@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import {URL} from '../../../../config';
 import NewsSlider from '../../../Widgets/NewsSlider/slider';
 import NewsList from '../../../Widgets/NewsList/newslist';
 

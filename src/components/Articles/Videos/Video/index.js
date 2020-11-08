@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import {URL} from '../../../../config';
 import Header from './header';
 import Body from './body';
+import { firebaseDb, dbTeams, dbVideos, dataFlatter } from '../../../../firebase';
 
 class Videos extends Component{
 
@@ -17,43 +16,60 @@ class Videos extends Component{
         this.request();
     }
 
-    componentWillUnmount(){
-        if(this._asyncRequest){
-            this._asyncRequest.cancel();
-        }
-    }
-
     request = () => {
-        this._asyncRequest = axios.get(`${URL}videos/${this.props.match.params.id}`)
-        .then(response => {
-            this._asyncRequest = null;
-            let teamId = response.data.team;
+        firebaseDb
+        .ref(`videos/${this.props.match.params.id}`)
+        .once('value')
+        .then((snapshot) => {
+            let video = snapshot.val()
 
-            this._asyncRequest = axios.get(`${URL}teams/${teamId}`)
-            .then(innerResponse => {
-                this._asyncRequest = null;
+            dbTeams
+            .orderByChild('teamId')
+            .equalTo(video.team)
+            .once('value')
+            .then((snapshot) => {
+                let team = dataFlatter(snapshot)
+
                 this.setState({
-                    video: response.data,
-                    team: innerResponse.data
-                });
-                this.requestRelated(innerResponse.data);
+                    video,
+                    team: team[0]
+                })
+
+                this.requestRelated(team[0]);
             })
+            .catch(e => {
+                console.log(e)
+            })
+        })
+        .catch(e => {
+            console.log(e)
         })
     }
 
     requestRelated = (team) => {
-        this._asyncRequest = axios.get(`${URL}teams`)
-        .then(response => {
-            this._asyncRequest  = null;
-            let teams = response.data;
-            this._asyncRequest = axios.get(`${URL}videos?q=${team.city}&_limit=3`)
-            .then(innerResponse => {
-                this._asyncRequest  = null;
+        dbTeams
+        .once('value')
+        .then(snapshot => {
+            let teams = dataFlatter(snapshot)
+            
+            dbVideos
+            .orderByChild('team')
+            .equalTo(team.teamId)
+            .limitToFirst(3)
+            .once('value')
+            .then(snapshot => {
+                let relatedVideos = dataFlatter(snapshot)
                 this.setState({
                     teams,
-                    relatedVideos:innerResponse.data
-                });
+                    relatedVideos
+                })
             })
+            .catch(e => {
+                console.log(e)
+            })
+        })
+        .catch(e => {
+            console.log(e)
         })
     }
 

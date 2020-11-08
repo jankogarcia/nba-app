@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import {URL} from '../../../../config';
 import styles from '../../articles.css';
 import Header from './header';
 import Body from './body';
+import {firebaseDb, dbTeams, dataFlatter} from '../../../../firebase';
 
 class NewsArticles extends Component{
     
@@ -16,26 +15,32 @@ class NewsArticles extends Component{
         this.request();
     }
 
-    componentWillUnmount(){
-        if(this._asyncRequest){
-            this._asyncRequest.cancel();
-        }
-    }
-
     request = () => {
-        this._asyncRequest = axios.get(`${URL}articles/${this.props.match.params.id}`)
-        .then(response => {
-            this._asyncRequest = null;
-            let teamId = response.data.team;
+        firebaseDb
+        .ref(`articles/${this.props.match.params.id}`)
+        .once('value')
+        .then((snapshot) => {
+            let article = snapshot.val();
+            
+            dbTeams
+            .orderByChild('teamId')
+            .equalTo(article.team)
+            .once('value')
+            .then((snapshot) => {
+                let team = dataFlatter(snapshot)
 
-            this._asyncRequest = axios.get(`${URL}teams/${teamId}`)
-            .then(innerResponse => {
-                this._asyncRequest = null;
                 this.setState({
-                    article: response.data,
-                    team: innerResponse.data
-                });
+                    article,
+                    team:team[0]
+                })
             })
+            .catch(e => {
+                console.log(e)
+            })
+
+        })
+        .catch(e => {
+            console.log(e)
         })
     }
 

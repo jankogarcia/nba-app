@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React from 'react';
 import VideosList from '../../../Widgets/VideosList/videoslist';
 
-const VideosMain = (props) => {
+const VideosMain = () => {
     return (
         <VideosList 
             type="card"
@@ -14,4 +14,3 @@ const VideosMain = (props) => {
 }
 
 export default VideosMain;
-

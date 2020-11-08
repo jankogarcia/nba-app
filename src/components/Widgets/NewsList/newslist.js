@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {TransitionGroup} from 'react-transition-group';
-import axios from 'axios';
-import {URL} from '../../../config';
 import Button from '../Buttons/button';
 import NewsTemplate from './news_template';
+import {dbArticles, dbTeams, dataFlatter} from '../../../firebase';
 
 class NewsList extends Component{
     
@@ -23,30 +22,35 @@ class NewsList extends Component{
     }
 
     request = (start, end) => {
-        this._asyncRequest = axios.get(`${URL}articles?_start=${start}&_end=${end}`)
-        .then(response => {
-            this._asyncRequest = null;
+        dbArticles
+        .orderByChild('id')
+        .startAt(start)
+        .endAt(end)
+        .once('value')
+        .then((snapshot) => {
+            let articles = dataFlatter(snapshot);
             this.setState({
-                items: [...this.state.items,...response.data],
+                items:[...this.state.items, ...articles],
                 start,
                 end
-            });
+            })
+        })
+        .catch(e => {
+            console.log(e)
         })
     }
 
     getTeams = () =>
     {
-        this._asyncRequest = axios.get(`${URL}teams`)
-        .then(response => {
-            this._asyncRequest = null;
-            this.setState({teams: response.data});
+        dbTeams
+        .once('value')
+        .then((snapshot) => {
+            let teams = dataFlatter(snapshot)
+            this.setState({teams})
         })
-    }
-
-    componentWillUnmount(){
-        if(this._asyncRequest){
-            this._asyncRequest.cancel();
-        }
+        .catch(e => {
+            console.log(e)
+        })
     }
 
     renderData(){
@@ -58,7 +62,7 @@ class NewsList extends Component{
 
     loadMore =() => {
         let end = this.state.end + this.state.amount;
-        this.request(this.state.end, end);
+        this.request(this.state.end + 1, end);
     }
 
     render(){
