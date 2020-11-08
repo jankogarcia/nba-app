@@ -65,14 +65,15 @@ class SignIn extends Component{
         event.preventDefault();
         if(isRegistered !== null){
             let dataToSubmit = {};
-            let formIsValid = [];
+            let formIsValid = true;
 
             for(let key in this.state.formData){
                 dataToSubmit[key] = this.state.formData[key].value
-                formIsValid.push(this.state.formData[key].valid)
+                formIsValid = this.state.formData[key].valid && formIsValid
             }
- 
-            if(formIsValid.indexOf(false) === -1){
+            
+            
+            if(formIsValid){
                 this.setState({
                     loading:true,
                     registerError:''
