@@ -1,0 +1,36 @@
+.signinContainer{
+    width: 80%;
+    margin: 0 auto;
+    height: 100vh;
+    padding-top: 50px;
+}
+
+.signinContainer h2{
+    font-weight: 300;
+    text-align: center;
+    font-size: 35px;
+}
+
+.signinContainer input{
+    font-size: 17px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px 10px;
+    box-sizing: border-box;
+    font-weight: 300;
+}
+
+.signinContainer button{
+    background: #03a9f4;
+    font-size: 13px;
+    padding: 10px;
+    color: #fff;
+    margin-top: 10px;
+}
+
+.error{
+    color: #FF5722;
+    font-weight: 600;
+    margin-top: 5px;
+    padding: 5px;
+}

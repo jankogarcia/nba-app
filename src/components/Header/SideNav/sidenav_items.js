@@ -34,7 +34,7 @@ const SideNavItems = () => {
             type: style.option,
             icon: 'sign-out',
             text: 'Sign out',
-            link: '/sign-our'
+            link: '/sign-out'
         }
     ]
 
