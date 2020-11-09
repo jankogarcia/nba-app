@@ -24,7 +24,7 @@ const Header = (props) => {
             <img alt="nba logo" src="/images/nba_logo.png"></img>
         </Link>
     )
-
+    
     return(
         <header className={style.header}>
             <SideNav {...props}/>
