@@ -52,7 +52,6 @@ const SideNavItems = (props) => {
     ]
 
     const restricted = (item,i) => {
-        console.log(props)
         let template = null;
 
         if(props.user === null && !item.loggedin){
