@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";
 import Routes from './routes';
-import {firebase, firebaseDb} from './firebase';
+import {firebase} from './firebase';
 
 
 const App = (props) =>{

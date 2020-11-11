@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
-import database from "firebase/database";
+import "firebase/database";
 import "firebase/auth";
+import "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC4gPnmCLeXjQQ0KlD1mfzT6-7tiDcF28g",
@@ -20,7 +21,7 @@ const firebaseDb = firebase.database();
 const dbArticles = firebaseDb.ref('articles');
 const dbVideos = firebaseDb.ref('videos');
 const dbTeams = firebaseDb.ref('teams');
-
+const firebaseStorage = firebase.storage();
 
 const dataFlatter = (snapshot) => {
     const data = [];
@@ -40,5 +41,6 @@ export {
     dbArticles,
     dbVideos,
     dbTeams,
-    dataFlatter
+    dataFlatter,
+    firebaseStorage
 }

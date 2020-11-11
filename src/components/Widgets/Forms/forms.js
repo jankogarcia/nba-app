@@ -1,5 +1,4 @@
 import React from 'react';
-import { formatDate } from '../../../config';
 import styles from './forms.css';
 
 const Forms = ({formData, change, id}) => {

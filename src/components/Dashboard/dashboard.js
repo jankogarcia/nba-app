@@ -4,8 +4,8 @@ import Forms from '../Widgets/Forms/forms';
 import {Editor} from 'react-draft-wysiwyg';
 import {EditorState, convertFromRaw, convertToRaw} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
-import {dbTeams, dataFlatter} from '../../firebase';
-import sidenav_items from '../Header/SideNav/sidenav_items';
+import {dbTeams} from '../../firebase';
+import FileUploader from '../Widgets/Fileuploader/fileuploader';
 
 class Dashboard extends Component{
 
@@ -62,6 +62,11 @@ class Dashboard extends Component{
                 valid:false,
                 touched:false,
                 validationMessage:''
+            },
+            image:{
+                element:'image',
+                value:'',
+                valid:true
             }
         }
     }
@@ -77,7 +82,7 @@ class Dashboard extends Component{
             formIsValid = this.state.formData[key].valid && formIsValid
         }
         
-        console.log(dataToSubmit)
+        console.log(dataToSubmit, formIsValid)
 
         if(formIsValid){
             this.setState({
@@ -172,10 +177,10 @@ class Dashboard extends Component{
             newElement.config.options = teams;
 
             newFormData['teams'] = newElement;
-            console.log(newFormData)
-            // this.setState({
-            //     formData:newFormData
-            // })
+            //console.log(newFormData)
+            this.setState({
+                formData:newFormData
+            })
 
         })
         .catch(e => {
@@ -183,6 +188,11 @@ class Dashboard extends Component{
                 postingError: e.message
             })
         })
+    }
+
+    storeFilename = (filename) => {
+        console.log(filename)
+        this.updateForm({id:'image'}, filename)
     }
 
     componentDidMount(){
@@ -194,6 +204,9 @@ class Dashboard extends Component{
             <div className={styles.postContainer}>
                 <form onSubmit={this.submitForm}>
                     <h2>add post</h2>
+                    <FileUploader 
+                        filename={(filename) => this.storeFilename(filename)}
+                    />
                     <Forms
                         id={'author'}
                         formData={this.state.formData.author}
