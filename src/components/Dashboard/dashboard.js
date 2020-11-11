@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import styles from './dashboard.css'
 import Forms from '../Widgets/Forms/forms';
+import {Editor} from 'react-draft-wysiwyg';
+import {EditorState, convertFromRaw, convertToRaw} from 'draft-js';
+import {stateToHTML} from 'draft-js-export-html';
+import {dbTeams, dataFlatter} from '../../firebase';
+import sidenav_items from '../Header/SideNav/sidenav_items';
 
 class Dashboard extends Component{
 
     state={
+        editorState:EditorState.createEmpty(),
         postingError:'',
         loading:false,
         formData:{
@@ -38,6 +44,25 @@ class Dashboard extends Component{
                 touched:false,
                 validationMessage:''
             },
+            body:{
+                element:'texteditor',
+                value:'',
+                valid:true
+            },
+            teams:{
+                element:'select',
+                value:'',
+                config:{
+                    name:'teams_select',
+                    options:[]
+                },
+                validation:{
+                    required:true,
+                },
+                valid:false,
+                touched:false,
+                validationMessage:''
+            }
         }
     }
 
@@ -67,7 +92,7 @@ class Dashboard extends Component{
         }
     }
 
-    updateForm = (element) => {
+    updateForm = (element, defaultValue = '') => {
         let newformData = {
             ...this.state.formData
         }
@@ -76,7 +101,11 @@ class Dashboard extends Component{
             ...newformData[element.id]
         }
 
-        newElement.value = element.event.target.value
+        if(defaultValue !== ''){
+            newElement.value = defaultValue
+        }else{
+            newElement.value = element.event.target.value
+        }
 
         if(element.blur){
             let validData = this.validate(newElement)
@@ -117,6 +146,49 @@ class Dashboard extends Component{
         </div>
     )
 
+    onEditorStateChange = (editorState) =>{
+        let contentState = editorState.getCurrentContent();
+        //let rawState = convertToRaw(contentState);
+        let html = stateToHTML(contentState);        
+        this.updateForm({id:'body'}, html)
+
+        this.setState({editorState})
+    }
+
+    loadTeams = () => {
+        dbTeams
+        .once('value')
+        .then((snapshot) => {
+            let teams = [];
+            snapshot.forEach(item => {
+                teams.push({
+                    value:item.val().teamId,
+                    text:item.val().city
+                })
+            })
+            let newFormData = {...this.state.formData}
+            let newElement = {...newFormData['teams']}
+            //console.log(newFormData)
+            newElement.config.options = teams;
+
+            newFormData['teams'] = newElement;
+            console.log(newFormData)
+            // this.setState({
+            //     formData:newFormData
+            // })
+
+        })
+        .catch(e => {
+            this.setState({
+                postingError: e.message
+            })
+        })
+    }
+
+    componentDidMount(){
+        this.loadTeams();
+    }
+
     render(){
         return(
             <div className={styles.postContainer}>
@@ -131,6 +203,17 @@ class Dashboard extends Component{
                         id={'title'}
                         formData={this.state.formData.title}
                         change={(element) => this.updateForm(element)}
+                    />
+                    <Forms
+                        id={'teams'}
+                        formData={this.state.formData.teams}
+                        change={(element) => this.updateForm(element)}
+                    />
+                    <Editor
+                        editorState={this.state.editorState}
+                        wrapperClassName="myEditor-wrapper"
+                        editorClassName="myEditor-editor"
+                        onEditorStateChange={this.onEditorStateChange}
                     />
                     {this.submitButton()}
                 </form>

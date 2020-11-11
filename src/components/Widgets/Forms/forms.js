@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDate } from '../../../config';
 import styles from './forms.css';
 
 const Forms = ({formData, change, id}) => {
@@ -31,6 +32,21 @@ const Forms = ({formData, change, id}) => {
                         />
                         {showError()}
                     </div>
+                )
+                break;
+            case 'select':
+                formTemplate = (
+                   <div>
+                        <select
+                            value={formData.value}
+                            name={formData.config.name}
+                            onChange={(event) => change({event, id})}
+                        >
+                            {formData.config.options.map((option, i) => (
+                                <option key={i} value={option.value}>{option.text}</option>
+                            ))}
+                        </select>
+                   </div>
                 )
                 break;
             default:
