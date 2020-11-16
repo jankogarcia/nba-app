@@ -4,7 +4,7 @@ import Forms from '../Widgets/Forms/forms';
 import {Editor} from 'react-draft-wysiwyg';
 import {EditorState, convertFromRaw, convertToRaw} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
-import {dbTeams} from '../../firebase';
+import {dbTeams, dbArticles} from '../../firebase';
 import FileUploader from '../Widgets/Fileuploader/fileuploader';
 
 class Dashboard extends Component{
@@ -90,10 +90,31 @@ class Dashboard extends Component{
                 postingError:''
             })
 
+            dbArticles
+            .orderByChild('id')
+            .limitToLast(1)
+            .once('value')
+            .then(snapshot => {
+                var lastId = null;
+                snapshot.forEach(item => {
+                    lastId = item.val().id
+                })
+                console.log(lastId) 
+            })
+            .catch(e => {
+                console.log(e)
+            })
             //if some error while submiting
             // this.setState({
             //     postingError: 'pula'
             // })
+        }else{
+            this.setState({
+                loading:false,
+                postingError: 'some error from db.'
+            })
+
+            
         }
     }
 
