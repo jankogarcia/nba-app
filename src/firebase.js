@@ -34,6 +34,10 @@ const dataFlatter = (snapshot) => {
     return data;
 }
 
+const getTimeStamp = () => {
+    return firebase.database.ServerValue.TIMESTAMP;
+}
+
 
 export {
     firebase, 
@@ -42,5 +46,6 @@ export {
     dbVideos,
     dbTeams,
     dataFlatter,
-    firebaseStorage
+    firebaseStorage,
+    getTimeStamp
 }

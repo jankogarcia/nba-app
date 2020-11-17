@@ -39,7 +39,8 @@ const Forms = ({formData, change, id}) => {
                         <select
                             value={formData.value}
                             name={formData.config.name}
-                            onChange={(event) => change({event, id})}
+                            onChange={(event) => change({event, id, blur:false})}
+                            onBlur={(event) => change({event, id, blur:true})}
                         >
                             {formData.config.options.map((option, i) => (
                                 <option key={i} value={option.value}>{option.text}</option>

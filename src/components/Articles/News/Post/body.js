@@ -7,11 +7,15 @@ const Body = (props) => {
             <h1>{props.article.title}</h1>
             <div className={styles.articleImage}
                 style={{
-                    background:`url('/images/articles/${props.article.image}')`
+                    background:`url('${props.image}')`
                 }}
             ></div>
-            <div className={styles.articleText}>
-                {props.article.body}
+            <div className={styles.articleText}
+                dangerouslySetInnerHTML={{
+                    __html:props.article.body
+                }}
+            >
+                {/* {props.article.body} */}
             </div>
         </div>
     )

@@ -2,17 +2,31 @@ import React, {Component} from 'react';
 import styles from '../../articles.css';
 import Header from './header';
 import Body from './body';
-import {firebaseDb, dbTeams, dataFlatter} from '../../../../firebase';
+import {firebaseDb, dbTeams, firebaseStorage, dataFlatter} from '../../../../firebase';
 
 class NewsArticles extends Component{
     
     state={
         article:null,
-        team:null
+        team:null,
+        imageUrl:''
     }
 
     componentDidMount(){
         this.request();
+    }
+
+    getImageUrl = (filename) => {
+        firebaseStorage
+        .ref('images/articles')
+        .child(filename)
+        .getDownloadURL()
+        .then(url => {
+            this.setState({imageUrl:url})
+        })
+        .catch(e => {
+            console.log(e)
+        })
     }
 
     request = () => {
@@ -21,6 +35,7 @@ class NewsArticles extends Component{
         .once('value')
         .then((snapshot) => {
             let article = snapshot.val();
+            this.getImageUrl(article.image);
             
             dbTeams
             .orderByChild('teamId')
@@ -57,7 +72,7 @@ class NewsArticles extends Component{
     renderBody(){
         return this.state.article === null
         ? null
-        : <Body article={this.state.article}/>
+        : <Body article={this.state.article} image={this.state.imageUrl}/>
     }
 
     render(){

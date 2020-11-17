@@ -4,7 +4,7 @@ import Forms from '../Widgets/Forms/forms';
 import {Editor} from 'react-draft-wysiwyg';
 import {EditorState, convertFromRaw, convertToRaw} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
-import {dbTeams, dbArticles} from '../../firebase';
+import {dbTeams, dbArticles, getTimeStamp} from '../../firebase';
 import FileUploader from '../Widgets/Fileuploader/fileuploader';
 
 class Dashboard extends Component{
@@ -49,7 +49,7 @@ class Dashboard extends Component{
                 value:'',
                 valid:true
             },
-            teams:{
+            team:{
                 element:'select',
                 value:'',
                 config:{
@@ -80,6 +80,7 @@ class Dashboard extends Component{
         for(let key in this.state.formData){
             dataToSubmit[key] = this.state.formData[key].value
             formIsValid = this.state.formData[key].valid && formIsValid
+            //console.log(key, this.state.formData[key].value, this.state.formData[key].valid, formIsValid);
         }
         
         console.log(dataToSubmit, formIsValid)
@@ -99,22 +100,37 @@ class Dashboard extends Component{
                 snapshot.forEach(item => {
                     lastId = item.val().id
                 })
-                console.log(lastId) 
+                
+                dataToSubmit['date'] = getTimeStamp()
+                dataToSubmit['id'] = lastId + 1;
+                dataToSubmit['team'] = parseInt(dataToSubmit['team'])
+                console.log(dataToSubmit)
+
+                dbArticles
+                .push(dataToSubmit)
+                .then(article => {
+                    this.props.history.push(`articles/${article.key}`)
+                })
+                .catch(e => {
+                    this.setState({
+                        loading:false,
+                        postingError: e.message
+                    })
+                    console.log(e)
+                })
             })
             .catch(e => {
+                this.setState({
+                    loading:false,
+                    postingError: e.message
+                })
                 console.log(e)
             })
-            //if some error while submiting
-            // this.setState({
-            //     postingError: 'pula'
-            // })
         }else{
             this.setState({
                 loading:false,
-                postingError: 'some error from db.'
+                postingError: 'please fill all the oligatory options. '
             })
-
-            
         }
     }
 
@@ -126,7 +142,7 @@ class Dashboard extends Component{
         let newElement = {
             ...newformData[element.id]
         }
-
+        
         if(defaultValue !== ''){
             newElement.value = defaultValue
         }else{
@@ -174,8 +190,8 @@ class Dashboard extends Component{
 
     onEditorStateChange = (editorState) =>{
         let contentState = editorState.getCurrentContent();
-        //let rawState = convertToRaw(contentState);
-        let html = stateToHTML(contentState);        
+        // let rawState = convertToRaw(contentState);
+        let html = stateToHTML(contentState);  
         this.updateForm({id:'body'}, html)
 
         this.setState({editorState})
@@ -193,11 +209,11 @@ class Dashboard extends Component{
                 })
             })
             let newFormData = {...this.state.formData}
-            let newElement = {...newFormData['teams']}
+            let newElement = {...newFormData['team']}
             //console.log(newFormData)
             newElement.config.options = teams;
 
-            newFormData['teams'] = newElement;
+            newFormData['team'] = newElement;
             //console.log(newFormData)
             this.setState({
                 formData:newFormData
@@ -239,8 +255,8 @@ class Dashboard extends Component{
                         change={(element) => this.updateForm(element)}
                     />
                     <Forms
-                        id={'teams'}
-                        formData={this.state.formData.teams}
+                        id={'team'}
+                        formData={this.state.formData.team}
                         change={(element) => this.updateForm(element)}
                     />
                     <Editor
