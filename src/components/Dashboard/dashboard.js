@@ -80,10 +80,7 @@ class Dashboard extends Component{
         for(let key in this.state.formData){
             dataToSubmit[key] = this.state.formData[key].value
             formIsValid = this.state.formData[key].valid && formIsValid
-            //console.log(key, this.state.formData[key].value, this.state.formData[key].valid, formIsValid);
         }
-        
-        console.log(dataToSubmit, formIsValid)
 
         if(formIsValid){
             this.setState({
@@ -104,7 +101,6 @@ class Dashboard extends Component{
                 dataToSubmit['date'] = getTimeStamp()
                 dataToSubmit['id'] = lastId + 1;
                 dataToSubmit['team'] = parseInt(dataToSubmit['team'])
-                console.log(dataToSubmit)
 
                 dbArticles
                 .push(dataToSubmit)
@@ -210,11 +206,9 @@ class Dashboard extends Component{
             })
             let newFormData = {...this.state.formData}
             let newElement = {...newFormData['team']}
-            //console.log(newFormData)
             newElement.config.options = teams;
 
             newFormData['team'] = newElement;
-            //console.log(newFormData)
             this.setState({
                 formData:newFormData
             })
@@ -228,7 +222,6 @@ class Dashboard extends Component{
     }
 
     storeFilename = (filename) => {
-        console.log(filename)
         this.updateForm({id:'image'}, filename)
     }
 
